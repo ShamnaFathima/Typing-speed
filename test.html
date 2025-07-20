@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Typing Speed Test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      padding: 30px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 15px;
+      padding: 40px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .challenge-btns {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 25px;
+      font-size: 15px;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff4d4d;
+      transform: scale(1.05);
+    }
+
+    #textToType {
+      font-size: 16px;
+      color: #222;
+      background: #fff3;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-size: 16px;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      background: #fefefe;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+      width: 100%;
+      background-color: #4e89ae;
+    }
+
+    .submit-btn:hover {
+      background-color: #3c6e91;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Typing Speed Challenge</h2>
+    <div class="challenge-btns">
+      <button onclick="setChallenge('normal')">Normal</button>
+      <button onclick="setChallenge('reverse')">Reverse</button>
+      <button onclick="setChallenge('timed')">30s Rush</button>
+    </div>
+    <p id="textToType">Click a challenge to begin!</p>
+    <textarea id="userInput" placeholder="Start typing here..." oninput="calculateTyping()"></textarea>
+    <button class="submit-btn" onclick="submitTest()">Submit Test</button>
+  </div>
+
+  <script>
+    const texts = {
+      normal: "The quick brown fox jumps over the lazy dog.",
+      reverse: "god yzal eht revo spmuj xof nworb kciuq ehT",
+      timed: "Type as much as you can in 30 seconds. Focus and go fast!"
+    };
+
+    let selectedText = "";
+    let startTime;
+    let timer;
+    let timeLimit = 0;
+
+    function setChallenge(mode) {
+      selectedText = texts[mode];
+      document.getElementById('textToType').textContent = selectedText;
+      document.getElementById('userInput').value = "";
+      startTime = new Date();
+
+      if (mode === 'timed') {
+        timeLimit = 30;
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          submitTest();
+        }, timeLimit * 1000);
+      } else {
+        timeLimit = 0;
+      }
+    }
+
+    function calculateTyping() {
+      if (!startTime) startTime = new Date();
+    }
+
+    function submitTest() {
+      const typed = document.getElementById('userInput').value;
+      const endTime = new Date();
+      const timeDiff = (endTime - startTime) / 1000 / 60;
+
+      const wordCount = typed.trim().split(/\s+/).length;
+      const wpm = Math.round(wordCount / timeDiff);
+
+      let correctChars = 0;
+      for (let i = 0; i < typed.length && i < selectedText.length; i++) {
+        if (typed[i] === selectedText[i]) correctChars++;
+      }
+      const accuracy = Math.round((correctChars / selectedText.length) * 100);
+
+      localStorage.setItem("wpm", wpm);
+      localStorage.setItem("accuracy", accuracy);
+
+      window.location.href = "result.html";
+    }
+  </script>
+</body>
+</html>

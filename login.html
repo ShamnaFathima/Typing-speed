@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - Typing Speed Test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      height: 100%;
+    }
+
+    body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('https://img.freepik.com/free-vector/orange-shiny-background_1035-9648.jpg') no-repeat center center/cover;
+  position: relative;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.login-container {
+  background: rgba(255, 255, 255, 0.97);
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(14, 14, 14, 0.3);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  z-index: 1;
+  position: relative;
+}
+
+
+    h2 {
+      margin-bottom: 25px;
+      color: #db7726;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .remember {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #e36439;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #e17d36;
+    }
+
+    .error {
+      margin-top: 10px;
+      color: red;
+      font-size: 14px;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="login-container">
+    <h2>Typing Speed Test Login</h2>
+    <input type="text" id="username" placeholder="Username" required>
+
+    <div class="password-wrapper">
+      <input type="password" id="password" placeholder="Password" required>
+      <span class="toggle-password" onclick="togglePassword()">👁️</span>
+    </div>
+
+    <div class="remember">
+      <label><input type="checkbox" id="rememberMe"> Remember Me</label>
+    </div>
+
+    <button onclick="validateLogin()">Login</button>
+    <p id="errorMsg" class="error"></p>
+  </div>
+
+  <script>
+    const correctPassword = "9961"
+
+    window.onload = function () {
+      const savedUser = localStorage.getItem("savedUsername");
+      if (savedUser) {
+        document.getElementById("username").value = savedUser;
+        document.getElementById("rememberMe").checked = true;
+      }
+    };
+
+    function validateLogin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const remember = document.getElementById("rememberMe").checked;
+
+      if (username === "") {
+        document.getElementById("errorMsg").textContent = "Please enter your name.";
+        return;
+      }
+
+      if (password === correctPassword) {
+        if (remember) {
+          localStorage.setItem("savedUsername", username);
+        } else {
+          localStorage.removeItem("savedUsername");
+        }
+        localStorage.setItem("loginName", username); // Store for use in result/certificate
+        window.location.href = "index.html";
+      } else {
+        document.getElementById("errorMsg").textContent = "❌ Incorrect password.";
+      }
+    }
+
+
+    function togglePassword() {
+      const pw = document.getElementById("password");
+      pw.type = pw.type === "password" ? "text" : "password";
+    }
+  </script>
+
+</body>
+</html>
